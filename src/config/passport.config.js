@@ -21,12 +21,16 @@ const initializePassport = () => {
         },
         async (jwt_payload, done) => {
             try {
-                return done(null, jwt_payload.user);
+                // Verificar que el usuario se encuentre correctamente en la base de datos
+                const user = await userModel.findById(jwt_payload.user._id);  // Buscar el usuario por el ID del payload
+                if (!user) return done(null, false);
+                return done(null, user);  // Si el usuario existe, se pasa al siguiente middleware
             } catch (error) {
                 return done(error);
             }
         }
     ));
+    
 
     // Estrategia de registro
     passport.use('register', new LocalStrategy(
@@ -46,8 +50,9 @@ const initializePassport = () => {
                     first_name,
                     last_name,
                     age,
-                    role: 'user',
+                    role: req.body.role || 'user', // Asignar 'role' enviado o 'user' por defecto
                 };
+                
 
                 const result = await userModel.create(newUser);
                 return done(null, result);
@@ -89,7 +94,7 @@ const initializePassport = () => {
               idGithub: profile._json.id,
             };
             const result = await userModel.create(newUser);
-            return done(null, newUser);
+            return done(null, result);
           } catch (error) {
             done(error);
           }

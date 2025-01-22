@@ -3,50 +3,64 @@ import passport from "passport";
 import { authorization } from "../middlewares/authorization.js";
 import { generateToken } from "../utils/generateToken.js";
 
-
 const router = Router();
 
 // Ruta de registro
+// Ruta de registro
 router.post(
-  "/register",
-  passport.authenticate("register", {
-    session: false,
-    failureRedirect: "/api/users/failRegister",
-  }),
-  async (req, res) => {
-    try {
-      if (!req.user) return res.status(403).send("Registration failure");
-      const token = generateToken(req.user);
-      res
-        .cookie("preEntregaFinal", token, { httpOnly: true })
-        .send("User registered");
-    } catch (error) {
-      res.status(400).send(error);
-    }
-  }
-);
-
-// Ruta de inicio de sesión
-router.post(
-    "/login",
-    passport.authenticate("login", {
+    "/register",
+    passport.authenticate("register", {
       session: false,
-      failureRedirect: "/api/users/failLogin",
+      failureRedirect: "/api/users/failRegister",
     }),
     async (req, res) => {
       try {
-        if (!req.user) return res.status(403).send("Login failure");
-  
-        // Genera el token
+        if (!req.user) return res.status(403).send("Registration failure");
         const token = generateToken(req.user);
   
-        // Envía el token en el cuerpo de la respuesta para poder acceder mas facilmente a las rutas protegidas.
-        res.json({ message: "User login successful", token: token });
+        // Respuesta mejorada con toda la información del usuario registrado
+        res
+          .cookie("preEntregaFinal", token, { httpOnly: true })
+          .status(201)  // Código HTTP 201 para "Creado"
+          .json({
+            message: "Usuario registrado exitosamente",
+            user: {
+              _id: req.user._id,
+              first_name: req.user.first_name,
+              last_name: req.user.last_name,
+              email: req.user.email,
+              age: req.user.age,
+              role: req.user.role,
+            },
+          });
       } catch (error) {
         res.status(400).send(error);
       }
     }
   );
+  
+
+// Ruta de inicio de sesión
+router.post(
+  "/login",
+  passport.authenticate("login", {
+    session: false,
+    failureRedirect: "/api/users/failLogin",
+  }),
+  async (req, res) => {
+    try {
+      if (!req.user) return res.status(403).send("Login failure");
+
+      // Genera el token
+      const token = generateToken(req.user);
+
+      // Envía el token en el cuerpo de la respuesta
+      res.json({ message: "User login successful", token });
+    } catch (error) {
+      res.status(400).send(error.message);
+    }
+  }
+);
 
 // Ruta de cierre de sesión
 router.get("/logout", (req, res) => {
@@ -81,8 +95,7 @@ router.get(
 );
 
 // Rutas para autenticación con GitHub
-router.get('/github', passport.authenticate('github', { session: false }));
-
+router.get("/github", passport.authenticate("github", { session: false }));
 
 router.get(
   "/githubcallback",
@@ -92,13 +105,14 @@ router.get(
   }),
   (req, res) => {
     try {
-      if (!req.user) return res.status(401).json({ message: "Invalid credentials" });
+      if (!req.user)
+        return res.status(401).json({ message: "Invalid credentials" });
       const token = generateToken(req.user);
       res
         .cookie("preEntregaFinal", token, { httpOnly: true })
         .send("User authenticated with GitHub");
     } catch (error) {
-      res.status(400).send(error);
+      res.status(400).send(error.message);
     }
   }
 );
