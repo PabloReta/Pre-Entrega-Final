@@ -1,6 +1,7 @@
 import CartRepository from '../dao/repositories/cart.repository.js';
 import ProductRepository from '../dao/repositories/product.repository.js';
 
+
 class CartManager {
   async createCart(cartData) {
     return await CartRepository.createCart(cartData);

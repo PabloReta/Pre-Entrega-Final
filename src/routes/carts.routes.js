@@ -1,6 +1,9 @@
 import { Router } from 'express';
 import CartManager from '../services/cart.service.js';
-import { isUser } from '../middlewares/auth.middleware.js';
+import TicketManager from '../services/ticket.service.js';
+
+import { authenticateToken } from '../middlewares/auth.middleware.js';
+import { authorization } from "../middlewares/authorization.js";
 
 const router = Router();
 
@@ -25,7 +28,7 @@ router.get('/:cid', async (req, res) => {
 });
 
 // Agregar producto al carrito (Solo usuarios)
-router.post('/:cid/products/:pid', isUser, async (req, res) => {
+router.post('/:cid/products/:pid', authenticateToken, authorization('user'), async (req, res) => {
   try {
     const { quantity } = req.body;
     const cart = await CartManager.addProductToCart(req.params.cid, req.params.pid, quantity);
@@ -42,6 +45,25 @@ router.delete('/:cid', async (req, res) => {
     res.status(200).json({ message: 'Cart deleted' });
   } catch (error) {
     res.status(400).json({ error: error.message });
+  }
+});
+
+// Procesar compra (Solo usuarios)
+router.post('/:cid/purchase', authenticateToken, authorization('user'), async (req, res) => {
+  try {
+    const cartId = req.params.cid;
+    const purchaserEmail = req.user.email;
+
+    const result = await TicketManager.processPurchase(cartId, purchaserEmail);
+
+    res.status(200).json({
+      message: 'Purchase processed',
+      success: result.success,
+      totalAmount: result.totalAmount,
+      failedProducts: result.failedProducts,
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 });
 

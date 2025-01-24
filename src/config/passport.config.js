@@ -21,6 +21,7 @@ const initializePassport = () => {
         },
         async (jwt_payload, done) => {
             try {
+                //console.log("JWT Payload recibido:", jwt_payload);
                 // Verificar que el usuario se encuentre correctamente en la base de datos
                 const user = await userModel.findById(jwt_payload.user._id);  // Buscar el usuario por el ID del payload
                 if (!user) return done(null, false);
@@ -64,18 +65,29 @@ const initializePassport = () => {
 
     // Estrategia de login
     passport.use('login', new LocalStrategy(
-        { usernameField: 'email' },
-        async (username, password, done) => {
-            try {
-                const user = await userModel.findOne({ email: username });
-                if (!user) return done(null, false, { message: "User not found" });
-                if (!isValidPassword(user, password)) return done(null, false, { message: "Invalid password" });
-                return done(null, user);
-            } catch (error) {
-                return done(error);
-            }
+    { usernameField: 'email' },
+    async (username, password, done) => {
+        try {
+            const user = await userModel.findOne({ email: username });
+            if (!user) return done(null, false, { message: "User not found" });
+            if (!isValidPassword(user, password)) return done(null, false, { message: "Invalid password" });
+
+            // Solo devolver los campos necesarios para la autenticación
+            const userData = {
+                _id: user._id,
+                email: user.email,
+                role: user.role,
+                first_name: user.first_name,
+                last_name: user.last_name,
+                age: user.age
+            };
+            
+            return done(null, userData);
+        } catch (error) {
+            return done(error);
         }
-    ));
+    }
+));
 
     // Estrategia GitHub
     passport.use('github', new GithubStrategy(

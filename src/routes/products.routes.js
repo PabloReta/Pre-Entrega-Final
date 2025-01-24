@@ -1,11 +1,13 @@
 import { Router } from 'express';
 import ProductManager from '../services/product.service.js'
-import { isAdmin } from '../middlewares/auth.middleware.js';
+import { authenticateToken } from '../middlewares/auth.middleware.js';
+import { authorization } from '../middlewares/authorization.js';
 
 const router = Router();
 
 // Crear un producto (Solo administradores)
-router.post('/', isAdmin, async (req, res) => {
+
+router.post('/',authenticateToken, authorization('admin'), async (req, res) => {
   try {
     const product = await ProductManager.createProduct(req.body);
     res.status(201).json({ message: 'Product created', product });
@@ -17,7 +19,7 @@ router.post('/', isAdmin, async (req, res) => {
 // Obtener todos los productos
 router.get('/', async (req, res) => {
   try {
-    const { filter, options } = req.query; // Puedes expandir esto para filtros avanzados
+    const { filter, options } = req.query; 
     const products = await ProductManager.getAllProducts(filter, options);
     res.status(200).json(products);
   } catch (error) {
@@ -36,7 +38,8 @@ router.get('/:pid', async (req, res) => {
 });
 
 // Actualizar un producto (Solo administradores)
-router.put('/:pid', isAdmin, async (req, res) => {
+
+router.put('/:pid', authorization('admin') , async (req, res) => {
   try {
     const updatedProduct = await ProductManager.updateProduct(req.params.pid, req.body);
     res.status(200).json({ message: 'Product updated', updatedProduct });
@@ -46,7 +49,8 @@ router.put('/:pid', isAdmin, async (req, res) => {
 });
 
 // Eliminar un producto (Solo administradores)
-router.delete('/:pid', isAdmin, async (req, res) => {
+
+router.delete('/:pid' , authorization('admin'), async (req, res) => {
   try {
     await ProductManager.deleteProduct(req.params.pid);
     res.status(200).json({ message: 'Product deleted' });

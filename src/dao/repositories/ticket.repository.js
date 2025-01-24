@@ -10,6 +10,7 @@ class TicketRepository {
   }
 
   async getAllTickets(filter = {}, options = {}) {
+    
     return await TicketDAO.findAll(filter, options);
   }
 }

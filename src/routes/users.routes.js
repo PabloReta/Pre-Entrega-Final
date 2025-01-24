@@ -2,43 +2,43 @@ import { Router } from "express";
 import passport from "passport";
 import { authorization } from "../middlewares/authorization.js";
 import { generateToken } from "../utils/generateToken.js";
+import UserDTO from "../dto/userDTO.js"; // Importar el DTO del usuario
 
 const router = Router();
 
 // Ruta de registro
-// Ruta de registro
 router.post(
-    "/register",
-    passport.authenticate("register", {
-      session: false,
-      failureRedirect: "/api/users/failRegister",
-    }),
-    async (req, res) => {
-      try {
-        if (!req.user) return res.status(403).send("Registration failure");
-        const token = generateToken(req.user);
-  
-        // Respuesta mejorada con toda la información del usuario registrado
-        res
-          .cookie("preEntregaFinal", token, { httpOnly: true })
-          .status(201)  // Código HTTP 201 para "Creado"
-          .json({
-            message: "Usuario registrado exitosamente",
-            user: {
-              _id: req.user._id,
-              first_name: req.user.first_name,
-              last_name: req.user.last_name,
-              email: req.user.email,
-              age: req.user.age,
-              role: req.user.role,
-            },
-          });
-      } catch (error) {
-        res.status(400).send(error);
-      }
+  "/register",
+  passport.authenticate("register", {
+    session: false,
+    failureRedirect: "/api/users/failRegister",
+  }),
+  async (req, res) => {
+    try {
+      if (!req.user) return res.status(403).send("Registration failure");
+
+      const token = generateToken(req.user);
+
+      // Respuesta mejorada con toda la información del usuario registrado
+      res
+        .cookie("preEntregaFinal", token, { httpOnly: true })
+        .status(201) // Código HTTP 201 para "Creado"
+        .json({
+          message: "Usuario registrado exitosamente",
+          user: {
+            _id: req.user._id,
+            first_name: req.user.first_name,
+            last_name: req.user.last_name,
+            email: req.user.email,
+            age: req.user.age,
+            role: req.user.role,
+          },
+        });
+    } catch (error) {
+      res.status(400).send(error);
     }
-  );
-  
+  }
+);
 
 // Ruta de inicio de sesión
 router.post(
@@ -94,6 +94,27 @@ router.get(
   }
 );
 
+// Ruta para obtener la información del usuario actual
+router.get(
+  "/current",
+  passport.authenticate("jwt", { session: false }), // Autenticación JWT obligatoria
+  (req, res) => {
+    try {
+      if (!req.user) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+
+      // Usar el DTO para estructurar los datos del usuario
+      const userDTO = new UserDTO(req.user);
+
+      // Respuesta con los datos permitidos
+      res.status(200).json({ user: userDTO });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
+);
+
 // Rutas para autenticación con GitHub
 router.get("/github", passport.authenticate("github", { session: false }));
 
@@ -107,7 +128,9 @@ router.get(
     try {
       if (!req.user)
         return res.status(401).json({ message: "Invalid credentials" });
+
       const token = generateToken(req.user);
+
       res
         .cookie("preEntregaFinal", token, { httpOnly: true })
         .send("User authenticated with GitHub");

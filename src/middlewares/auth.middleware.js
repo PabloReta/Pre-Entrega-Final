@@ -1,10 +1,24 @@
-export const isAdmin = (req, res, next) => {
-    if (req.user?.role === 'admin') return next();
-    res.status(403).json({ error: 'Access denied. Admins only.' });
-  };
-  
-  export const isUser = (req, res, next) => {
-    if (req.user?.role === 'user') return next();
-    res.status(403).json({ error: 'Access denied. Users only.' });
-  };
+import jwt from 'jsonwebtoken';
+
+export const authenticateToken = (req, res, next) => {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1]; 
+
+  if (!token) {
+    return res.status(401).json({ error: 'No token provided' });
+  }
+
+  jwt.verify(token, process.env.SECRET_JWT, (err, user) => {
+    if (err) {
+      console.error('Token verification error:', err.message);
+      return res.status(403).json({ error: 'Invalid token' });
+    }
+    //console.log('Decoded user:', user);
+    req.user = user; 
+    next();
+  });
+};
+
+
+
   
