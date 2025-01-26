@@ -52,18 +52,17 @@ router.delete('/:cid', async (req, res) => {
 router.post('/:cid/purchase', authenticateToken, authorization('user'), async (req, res) => {
   try {
     const cartId = req.params.cid;
-    const purchaserEmail = req.user.email;
+    const purchaser = req.user.email;
 
-    const result = await TicketManager.processPurchase(cartId, purchaserEmail);
+    const result = await CartManager.purchaseCart(cartId, purchaser);
 
     res.status(200).json({
-      message: 'Purchase processed',
-      success: result.success,
-      totalAmount: result.totalAmount,
-      failedProducts: result.failedProducts,
+      message: 'Purchase completed',
+      processedProducts: result.processedProducts,
+      unprocessedProducts: result.unprocessedProducts,
     });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(400).json({ error: error.message });
   }
 });
 

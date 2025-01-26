@@ -21,7 +21,7 @@ const initializePassport = () => {
         },
         async (jwt_payload, done) => {
             try {
-                //console.log("JWT Payload recibido:", jwt_payload);
+                //Console.log("JWT Payload recibido:", jwt_payload);
                 // Verificar que el usuario se encuentre correctamente en la base de datos
                 const user = await userModel.findById(jwt_payload.user._id);  // Buscar el usuario por el ID del payload
                 if (!user) return done(null, false);
