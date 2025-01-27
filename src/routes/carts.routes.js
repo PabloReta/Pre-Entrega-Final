@@ -1,9 +1,7 @@
 import { Router } from 'express';
 import CartManager from '../services/cart.service.js';
-import TicketManager from '../services/ticket.service.js';
-
 import { authenticateToken } from '../middlewares/auth.middleware.js';
-import { authorization } from "../middlewares/authorization.js";
+import { authorization } from '../middlewares/authorization.js';
 
 const router = Router();
 
@@ -57,7 +55,9 @@ router.post('/:cid/purchase', authenticateToken, authorization('user'), async (r
     const result = await CartManager.purchaseCart(cartId, purchaser);
 
     res.status(200).json({
-      message: 'Purchase completed',
+      message: result.message,
+      ticketId: result.ticketId,
+      totalProcessedAmount: result.totalProcessedAmount,
       processedProducts: result.processedProducts,
       unprocessedProducts: result.unprocessedProducts,
     });
@@ -67,3 +67,4 @@ router.post('/:cid/purchase', authenticateToken, authorization('user'), async (r
 });
 
 export default router;
+

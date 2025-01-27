@@ -1,9 +1,12 @@
 import UserDAO from '../models/user.dao.js';
 
+
 class UserRepository {
   async createUser(userData) {
     return await UserDAO.create(userData);
   }
+
+  
 
   async getUserByEmail(email) {
     return await UserDAO.findByEmail(email);
