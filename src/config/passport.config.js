@@ -11,20 +11,20 @@ const LocalStrategy = local.Strategy;
 const JWTStrategy = jwt.Strategy;
 
 const initializePassport = () => {
-    // Estrategia JWT
-    passport.use('jwt', new JWTStrategy(
+     passport.use('jwt', new JWTStrategy(
         {
             jwtFromRequest: ExtractJwt.fromExtractors([
-                (req) => req && req.cookies ? req.cookies["preEntregaFinal"] : null
+                (req) => req?.cookies?.preEntregaFinal,
+                ExtractJwt.fromAuthHeaderAsBearerToken(), // Agregado para soportar tokens Bearer
             ]),
-            secretOrKey: process.env.SECRET_JWT
+            secretOrKey: process.env.SECRET_JWT,
         },
         async (jwt_payload, done) => {
             try {
-                console.log(jwt_payload)
-                const user = await userModel.findById(jwt_payload.user._id);  
+                console.log("JWT Payload:", jwt_payload);
+                const user = await userModel.findById(jwt_payload.user._id);
                 if (!user) return done(null, false);
-                return done(null, user);  
+                return done(null, user);
             } catch (error) {
                 return done(error);
             }

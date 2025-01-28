@@ -3,6 +3,7 @@ import passport from "passport";
 import { authorization } from "../middlewares/authorization.js";
 import { generateToken } from "../utils/generateToken.js";
 import UserDTO from "../dto/userDTO.js"; 
+import { authenticateToken } from "../middlewares/auth.middleware.js";
 
 const router = Router();
 
@@ -67,52 +68,35 @@ router.get("/logout", (req, res) => {
   res.json({ message: "User logged out" });
 });
 
-// Ruta protegida para perfil de usuario
-router.get(
-  "/profile",
-  passport.authenticate("jwt", { session: false }),
-  authorization("user"),
-  (req, res) => {
-    const { first_name, last_name, email, role } = req.user;
-    res.status(200).json({ first_name, last_name, email, role });
-  }
-);
 
 // Ruta pública (accesible por cualquier usuario)
 router.get("/public", (req, res) => {
   res.send("This is a public route accessible to anyone.");
 });
 
-// Ruta protegida solo para administradores
-router.get(
-  "/admin",
-  passport.authenticate("jwt", { session: false }),
-  authorization("admin"),
-  (req, res) => {
-    res.send("This route is accessible only to admins.");
-  }
-);
+// Ruta para obtener el perfil del usuario autenticado
+router.get('/profile', authenticateToken, (req, res) => {
+  res.json({
+      message: "User profile",
+      user: req.user, // La información del usuario extraída del token
+  });
+});
 
-// Ruta para obtener la información del usuario actual
-router.get(
-  "/current",
-  passport.authenticate("jwt", { session: false }), // Autenticación JWT obligatoria
-  (req, res) => {
-    try {
-      if (!req.user) {
-        return res.status(401).json({ message: "Unauthorized" });
-      }
+// Ruta para administradores
+router.get('/admin', authenticateToken, authorization('admin'), (req, res) => {
+  res.json({
+      message: "Welcome, admin!",
+      admin: req.user, // La información del administrador extraída del token
+  });
+});
 
-      // Usar el DTO para estructurar los datos del usuario
-      const userDTO = new UserDTO(req.user);
-
-      // Respuesta con los datos permitidos
-      res.status(200).json({ user: userDTO });
-    } catch (error) {
-      res.status(500).json({ error: error.message });
-    }
-  }
-);
+// Ruta para información del usuario actual
+router.get('/current', authenticateToken, (req, res) => {
+  res.json({
+      message: "Current user data",
+      user: req.user, // La información del usuario extraída del token
+  });
+});
 
 // Rutas para autenticación con GitHub
 router.get("/github", passport.authenticate("github", { session: false }));
