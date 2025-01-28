@@ -2,10 +2,9 @@ import { Router } from "express";
 import passport from "passport";
 import { authorization } from "../middlewares/authorization.js";
 import { generateToken } from "../utils/generateToken.js";
-import UserDTO from "../dto/userDTO.js"; 
+import UserDTO from "../dto/userDTO.js"; // Importar el DTO del usuario
 
 const router = Router();
-
 
 // Ruta de registro
 router.post(
@@ -20,9 +19,10 @@ router.post(
 
       const token = generateToken(req.user);
 
+      // Respuesta mejorada con toda la información del usuario registrado
       res
         .cookie("preEntregaFinal", token, { httpOnly: true })
-        .status(201) 
+        .status(201) // Código HTTP 201 para "Creado"
         .json({
           message: "Usuario registrado exitosamente",
           user: {
@@ -97,8 +97,7 @@ router.get(
 // Ruta para obtener la información del usuario actual
 router.get(
   "/current",
-  passport.authenticate("jwt", { session: false }),
-  authorization("admin"), // Autenticación JWT obligatoria
+  passport.authenticate("jwt", { session: false }), // Autenticación JWT obligatoria
   (req, res) => {
     try {
       if (!req.user) {
