@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt';
-import User from '../dao/models/User.js'; // Asegúrate de que la ruta sea correcta
+import User from '../dao/models/User.js'; 
 
 export const registerUser = async (req, res) => {
   try {
