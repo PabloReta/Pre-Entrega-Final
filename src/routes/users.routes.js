@@ -2,7 +2,7 @@ import { Router } from "express";
 import passport from "passport";
 import { authorization } from "../middlewares/authorization.js";
 import { generateToken } from "../utils/generateToken.js";
-import UserDTO from "../dto/userDTO.js"; 
+
 import { authenticateToken } from "../middlewares/auth.middleware.js";
 
 const router = Router();
@@ -78,7 +78,7 @@ router.get("/public", (req, res) => {
 router.get('/profile', authenticateToken, (req, res) => {
   res.json({
       message: "User profile",
-      user: req.user, // La información del usuario extraída del token
+      user: req.user, 
   });
 });
 
@@ -86,7 +86,7 @@ router.get('/profile', authenticateToken, (req, res) => {
 router.get('/admin', authenticateToken, authorization('admin'), (req, res) => {
   res.json({
       message: "Welcome, admin!",
-      admin: req.user, // La información del administrador extraída del token
+      admin: req.user, 
   });
 });
 
@@ -94,7 +94,7 @@ router.get('/admin', authenticateToken, authorization('admin'), (req, res) => {
 router.get('/current', authenticateToken, (req, res) => {
   res.json({
       message: "Current user data",
-      user: req.user, // La información del usuario extraída del token
+      user: req.user, 
   });
 });
 
