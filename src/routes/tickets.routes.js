@@ -1,14 +1,12 @@
 import { Router } from 'express';
 import TicketManager from '../services/ticket.service.js';
-//import { isUser } from '../middlewares/auth.middleware.js';
+
 import { authenticateToken } from '../middlewares/auth.middleware.js';
 import { authorization } from "../middlewares/authorization.js";
 
 const router = Router();
 
 // Crear un ticket (Solo usuarios)
-
-// Por ahora savo el middleware de autenticacion hasta que funcione **isUser**
 router.post('/', authenticateToken , authorization('user'), async (req, res) => {
   try {
     const { amount, purchaser } = req.body;

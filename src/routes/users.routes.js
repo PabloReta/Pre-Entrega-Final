@@ -2,7 +2,7 @@ import { Router } from "express";
 import passport from "passport";
 import { authorization } from "../middlewares/authorization.js";
 import { generateToken } from "../utils/generateToken.js";
-import UserDTO from "../dto/userDTO.js"; // Importar el DTO del usuario
+import UserDTO from "../dto/userDTO.js"; 
 
 const router = Router();
 
@@ -19,10 +19,9 @@ router.post(
 
       const token = generateToken(req.user);
 
-      // Respuesta mejorada con toda la información del usuario registrado
       res
         .cookie("preEntregaFinal", token, { httpOnly: true })
-        .status(201) // Código HTTP 201 para "Creado"
+        .status(201) 
         .json({
           message: "Usuario registrado exitosamente",
           user: {

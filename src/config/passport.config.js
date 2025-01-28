@@ -21,11 +21,10 @@ const initializePassport = () => {
         },
         async (jwt_payload, done) => {
             try {
-                //Console.log("JWT Payload recibido:", jwt_payload);
-                // Verificar que el usuario se encuentre correctamente en la base de datos
-                const user = await userModel.findById(jwt_payload.user._id);  // Buscar el usuario por el ID del payload
+                console.log(jwt_payload)
+                const user = await userModel.findById(jwt_payload.user._id);  
                 if (!user) return done(null, false);
-                return done(null, user);  // Si el usuario existe, se pasa al siguiente middleware
+                return done(null, user);  
             } catch (error) {
                 return done(error);
             }
@@ -51,7 +50,7 @@ const initializePassport = () => {
                     first_name,
                     last_name,
                     age,
-                    role: req.body.role || 'user', // Asignar 'role' enviado o 'user' por defecto
+                    role: req.body.role || 'user', 
                 };
                 
 
@@ -72,7 +71,7 @@ const initializePassport = () => {
             if (!user) return done(null, false, { message: "User not found" });
             if (!isValidPassword(user, password)) return done(null, false, { message: "Invalid password" });
 
-            // Solo devolver los campos necesarios para la autenticación
+            
             const userData = {
                 _id: user._id,
                 email: user.email,
