@@ -1,5 +1,3 @@
-//Aplicando correciones
-//import ProductDAO from '../models/Product.js';
 import ProductDAO from '../dao/ProductDAO.js';
 
 

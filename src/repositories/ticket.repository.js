@@ -1,5 +1,3 @@
-//Aplicando correciones
-//import TicketDAO from '../models/Ticket.js';
 import TicketDAO from '../dao/TicketDAO.js';
 
 class TicketRepository {
