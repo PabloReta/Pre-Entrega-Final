@@ -2,7 +2,7 @@ import passport from 'passport';
 import local from 'passport-local';
 import jwt, { ExtractJwt } from 'passport-jwt';
 import GithubStrategy from 'passport-github2';
-import userModel from '../models/user.model.js';
+import userModel from '../models/User.js';
 import { createHash, isValidPassword } from '../utils/hashingUtils.js';
 import dotenv from 'dotenv';
 
@@ -21,7 +21,7 @@ const initializePassport = () => {
         },
         async (jwt_payload, done) => {
             try {
-                console.log("JWT Payload:", jwt_payload);
+                //console.log("JWT Payload:", jwt_payload);
                 const user = await userModel.findById(jwt_payload.user._id);
                 if (!user) return done(null, false);
                 return done(null, user);

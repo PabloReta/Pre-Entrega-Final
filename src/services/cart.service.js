@@ -1,5 +1,5 @@
-import CartRepository from '../dao/repositories/cart.repository.js';
-import ProductRepository from '../dao/repositories/product.repository.js';
+import CartRepository from '../repositories/cart.repository.js';
+import ProductRepository from '../repositories/product.repository.js';
 import TicketManager from './ticket.service.js';
 
 class CartManager {

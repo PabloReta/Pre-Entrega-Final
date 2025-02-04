@@ -1,18 +1,4 @@
-import mongoose from 'mongoose';
-
-const cartSchema = new mongoose.Schema({
-  products: [
-    {
-      product: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Product',
-      },
-      quantity: { type: Number, required: true },
-    },
-  ],
-});
-
-const CartModel = mongoose.model('Cart', cartSchema);
+import CartModel from '../models/Cart.js';
 
 class CartDAO {
   async create(cartData) {

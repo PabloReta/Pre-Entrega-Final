@@ -1,4 +1,4 @@
-import TicketRepository from '../dao/repositories/ticket.repository.js';
+import TicketRepository from '../repositories/ticket.repository.js';
 import { v4 as uuidv4 } from 'uuid';
 import ProductManager from './product.service.js';
 import CartManager from './cart.service.js';

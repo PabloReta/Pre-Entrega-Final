@@ -1,4 +1,4 @@
-import UserRepository from '../dao/repositories/user.repository.js';
+import UserRepository from '../repositories/user.repository.js';
 
 class UserManager {
   async createUser(userData) {

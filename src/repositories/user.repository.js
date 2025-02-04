@@ -1,4 +1,6 @@
-import UserDAO from '../models/User.js';
+//Aplicando correciones
+//import UserDAO from '../models/User.js';
+import UserDAO from '../dao/UserDao.js';
 
 class UserRepository {
   async createUser(userData) {
