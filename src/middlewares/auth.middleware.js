@@ -13,7 +13,6 @@ export const authenticateToken = (req, res, next) => {
       console.error('Token verification error:', err.message);
       return res.status(403).json({ error: 'Invalid token' });
     }
-    //console.log('Decoded user:', user);
     req.user = user; 
     next();
   });

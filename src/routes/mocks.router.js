@@ -168,11 +168,5 @@ router.post('/generateMockProducts', async (req, res) => {
   }
 });
 
-//Borrar al terminar la prueba
-router.delete('/cleanCarts', async (req, res) => {
-  await Cart.deleteMany({});
-  res.json({ message: 'Todos los carritos eliminados' });
-});
-
 
 export default router

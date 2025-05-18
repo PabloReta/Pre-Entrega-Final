@@ -11,7 +11,7 @@ const swaggerOptions = {
       version: '1.0.0',
     },
   },
-  apis: ['./src/routes/mocks.router.js'], // acá apuntamos al archivo con los endpoints a documentar
+  apis: ['./src/routes/mocks.router.js'], 
 };
 
 const specs = swaggerJSDoc(swaggerOptions);

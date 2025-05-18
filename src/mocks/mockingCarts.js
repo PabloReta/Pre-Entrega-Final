@@ -4,7 +4,7 @@ import Product from '../models/Product.js';
 import { fakerES as faker } from '@faker-js/faker';
 
 export const generateCarts = async (users) => {
-  const allProducts = await Product.find(); // <-- obtenemos productos reales
+  const allProducts = await Product.find(); 
   if (allProducts.length === 0) {
     throw new Error('No hay productos en la base de datos');
   }

@@ -1,19 +1,23 @@
-Pre Entrega Final - Backend
+# 📦 Pre Entrega Final - Backend
 
-Este proyecto forma parte de la Pre Entrega Final del curso de Backend de Coderhouse. Incluye autenticación con GitHub, manejo de sesiones y tokens JWT, persistencia en MongoDB, mockeo de datos, y una imagen Docker lista para desplegar.
+Este proyecto corresponde a la Pre Entrega Final del curso de Backend de **Coderhouse**.  
+Incluye autenticación con GitHub, manejo de sesiones con cookies y JWT, persistencia de datos en MongoDB, generación de datos mockeados y una imagen Docker lista para desplegar la aplicación en cualquier entorno.
 
-🚀 Requisitos
+---
 
-Node.js >= 18 (para desarrollo local)
+## 🚀 Requisitos
 
-Docker y Docker Hub (opcional para desplegar la app)
+- Node.js v18 o superior (para desarrollo local)
+- Docker y cuenta en Docker Hub (opcional para ejecución en contenedor)
+- Archivo `.env` con las variables necesarias (ver sección correspondiente)
 
-Archivo .env con las variables necesarias (ver sección de variables de entorno)
+---
 
-🔧 Variables de Entorno
+## 🔐 Variables de Entorno
 
-Creá un archivo .env en la raíz del proyecto (no se sube al repo, está en .gitignore) con este contenido:
+Creá un archivo `.env` en la raíz del proyecto con el siguiente contenido:
 
+```env
 PORT=8080
 
 GITHUB_CLIENT_ID=tu_github_client_id
@@ -23,37 +27,71 @@ GITHUB_CALLBACK_URL=http://localhost:8080/api/users/githubcallback
 SECRET_SESSION=clave_para_session
 MONGO_URI=tu_uri_de_mongo
 SECRET_JWT=clave_para_jwt
+```
 
-También podés usar el archivo .env.example como plantilla base.
+También podés usar el archivo `.env.example` como plantilla base:
 
-🧪 Instalación y ejecución local
+```bash
+cp .env.example .env
+```
 
+---
+
+## 🧪 Instalación y Ejecución Local
+
+```bash
 git clone https://github.com/tuusuario/preentregafinal.git
 cd preentregafinal
 npm install
-cp .env.example .env  # luego completar con tus valores
+cp .env.example .env  # completar luego con tus variables reales
 npm start
+```
 
-La app correrá en: http://localhost:8080
+La aplicación estará disponible en: [http://localhost:8080](http://localhost:8080)
 
-🐳 Uso con Docker
+---
 
-1. Descargar la imagen desde Docker Hub
+## 🐳 Ejecución con Docker
 
+Este proyecto también puede ejecutarse usando Docker. La imagen está publicada en Docker Hub.
+
+### 🔗 Enlace a Docker Hub
+
+👉 [https://hub.docker.com/r/pabloreta/preentregafinal](https://hub.docker.com/r/pabloreta/preentregafinal)
+
+### 📥 Descargar imagen
+
+```bash
 docker pull pabloreta/preentregafinal
+```
 
-2. Crear el archivo .env (puede basarse en .env.example)
+### 🚀 Ejecutar contenedor
 
-cp .env.example .env  # y completar los valores reales
+#### Opción 1: usando archivo `.env`
 
-3. Ejecutar el contenedor
-
+```bash
+cp .env.example .env  # completar con valores reales
 docker run -p 8080:8080 --env-file .env pabloreta/preentregafinal
+```
 
-La aplicación estará disponible en: http://localhost:8080
+#### Opción 2: pasando variables manualmente
 
-📁 Estructura del Proyecto
+```bash
+docker run -p 8080:8080 \
+-e MONGO_URI="tu_uri_de_mongo" \
+-e SECRET_SESSION="tu_secreto_session" \
+-e SECRET_JWT="tu_secreto_jwt" \
+-e GITHUB_CLIENT_ID="tu_client_id" \
+-e GITHUB_CLIENT_SECRET="tu_client_secret" \
+-e GITHUB_CALLBACK_URL="http://localhost:8080/api/users/githubcallback" \
+pabloreta/preentregafinal
+```
 
+---
+
+## 📁 Estructura del Proyecto
+
+```
 📦 preentregafinal/
  ┣ 📁 src/
  ┃ ┣ 📂 config/
@@ -69,22 +107,24 @@ La aplicación estará disponible en: http://localhost:8080
  ┣ 📄 package.json
  ┣ 📄 .env.example
  ┣ 📄 README.md
+```
 
-✨ Funcionalidades
+---
 
-Autenticación con GitHub
+## ✨ Funcionalidades
 
-Inicio de sesión con JWT
+✅ Autenticación con GitHub  
+✅ Inicio de sesión con JWT  
+✅ Gestión de sesiones con cookies  
+✅ Persistencia en MongoDB (local o en Atlas)  
+✅ Mockeo de datos con Faker.js  
+✅ Imagen Docker lista para despliegue
 
-Gestión de sesiones con cookies
+---
 
-Persistencia con MongoDB (local o Atlas)
+## 👤 Autor
 
-Mockeo de datos con Faker.js
+- **Pablo Reta**  
+- GitHub: [@pabloreta](https://github.com/pabloreta)
 
-Imagen Docker lista para producción/despliegue
-
-👤 Autor
-
-Pablo RetaGitHub
-
+---

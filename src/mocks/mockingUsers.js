@@ -5,7 +5,7 @@ export const generateMockUser = () => ({
     first_name: faker.person.firstName(),
     last_name: faker.person.lastName(),
     email: faker.internet.email(),
-    age: faker.number.int({ min: 18, max: 80 }), // 👈 agregás esta línea
+    age: faker.number.int({ min: 18, max: 80 }), 
     password: createHash('coder123'),
     role: faker.helpers.arrayElement(['user', 'admin']),
     pets: []

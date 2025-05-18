@@ -15,13 +15,12 @@ const initializePassport = () => {
         {
             jwtFromRequest: ExtractJwt.fromExtractors([
                 (req) => req?.cookies?.preEntregaFinal,
-                ExtractJwt.fromAuthHeaderAsBearerToken(), // Agregado para soportar tokens Bearer
+                ExtractJwt.fromAuthHeaderAsBearerToken(), 
             ]),
             secretOrKey: process.env.SECRET_JWT,
         },
         async (jwt_payload, done) => {
             try {
-                //console.log("JWT Payload:", jwt_payload);
                 const user = await userModel.findById(jwt_payload.user._id);
                 if (!user) return done(null, false);
                 return done(null, user);
